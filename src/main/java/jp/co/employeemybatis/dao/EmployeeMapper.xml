@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.co.employeemybatis.dao.EmployeeMapper">
+
+	<resultMap type="employee" id="result">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="gender" column="gender" />
+		<result property="hobbies" column="hobbies" />
+		<result property="country" column="country" />
+		<result property="address" column="address" />
+	</resultMap>
+
+	<!-- 全ての社員リスト取得SQL -->
+	<select id="getAllEmployees" resultType="employee" resultMap="result">
+
+		SELECT * FROM employee
+
+	</select>
+
+	<!-- 複数検索条件の社員リスト取得SQL select -->
+
+	<select id="findEmployeeLike" resultType="employee" resultMap="result">
+
+		SELECT * FROM employee
+		<where>
+			<if test="name != ''">
+				name LIKE CONCAT('%', #{name},'%')
+			</if>
+			<if test="email != ''">
+				AND email LIKE CONCAT('%', #{email},'%')
+			</if>
+			<if test="gender != ''">
+				AND gender = #{gender}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 社員登録SQL insert -->
+	<insert id="insertEmployee" parameterType="employee" keyProperty="id" useGeneratedKeys="true">
+
+		INSERT INTO employee(
+			name,
+			email,
+			gender,
+			hobbies,
+			country,
+			address
+		)
+		VALUES(
+			#{name},
+			#{email},
+			#{gender},
+			#{hobbies},
+			#{country},
+			#{address}
+		)
+	
+	</insert>
+
+	<select id="findById" parameterType="employee" resultType="employee" resultMap="result">
+	
+		SELECT * FROM employee WHERE id = #{employeeId}
+	
+	</select>
+
+	<!-- 社員更新SQL update -->
+	<update id="updateEmployee" parameterType="employee">
+	
+		UPDATE employee
+		SET
+			name = #{name},
+			email = #{email},
+			gender = #{gender},
+			hobbies = #{hobbies},
+			country = #{country},
+			address = #{address}
+		WHERE id = #{id}
+	
+	</update>
+
+	<!-- 社員削除SQL delete -->
+	<delete id="deleteEmployee" parameterType="int">
+	
+	DELETE FROM employee WHERE id = #{emloyeeId}
+	
+	</delete>
+
+</mapper>
